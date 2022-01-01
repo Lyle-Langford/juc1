@@ -1,17 +1,27 @@
 package com.juc.t1125;
 
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
 
-public class T03_DelayQueue {
+/**
+ * 延迟队列
+ * 并且按时间排序，谁的时间到了谁先出来
+ * 其本质是PriorityQueue
+ */
+public class T07_DelayQueue {
 
     static BlockingQueue<MyTask> tasks = new DelayQueue<>();
 
     static Random r = new Random();
 
+    /**
+     * 定义一个延迟对象
+     * 并实现其时间方法
+     */
     static class MyTask implements Delayed{
         String name;
         long runningTime;
@@ -58,5 +68,9 @@ public class T03_DelayQueue {
         for (int i=0; i<4; i++){
             System.out.println(tasks.take());
         }
+    }
+
+    static void m2(){
+
     }
 }
