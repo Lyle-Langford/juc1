@@ -53,6 +53,8 @@ public class T04_Queue {
 //            e.printStackTrace();
 //        }
 
+            strQueue.offer("-1");
+
 
         new Thread(()->{
             for (int i=0; i<20; i++){

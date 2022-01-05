@@ -18,17 +18,20 @@ public class T07_CompletableFuture {
         stopWatch.start("sw1"); //开始计时
 
 
-
+        //异步执行
         CompletableFuture<Double> futureTM = CompletableFuture.supplyAsync(() -> priceOfTM());
         CompletableFuture<Double> futureTB = CompletableFuture.supplyAsync(() -> priceOfTB());
         CompletableFuture<Double> futureJD = CompletableFuture.supplyAsync(() -> priceOfJD());
 
-        CompletableFuture.supplyAsync(()->priceOfTM())
+        //批量管理
+        CompletableFuture.allOf(futureTM, futureTB, futureJD).join();
+        //CompletableFuture.anyOf(futureTM, futureTB, futureJD).get();
+
+        //结果链式管理
+        /*CompletableFuture.supplyAsync(()->priceOfTM())
                 .thenApply(String::valueOf)
                 .thenApply(str -> "price " +  str)
-                .thenAccept(System.out::println);
-
-        CompletableFuture.allOf(futureTM, futureTB, futureJD).join();
+                .thenAccept(System.out::println);*/
 
         stopWatch.stop();
         System.out.println(stopWatch.prettyPrint());

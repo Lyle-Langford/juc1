@@ -107,7 +107,6 @@ public class T12_ForkJoinPool {
                 subTask2.fork();
                 return subTask1.join() + subTask2.join();
             }
-
         }
     }
 }

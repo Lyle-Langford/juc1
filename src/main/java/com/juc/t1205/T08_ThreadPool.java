@@ -60,5 +60,10 @@ public class T08_ThreadPool {
         System.out.println(executor.getQueue());
     }
 
-
+    static void jdkThreadPool(){
+        Executors.newSingleThreadExecutor();
+        Executors.newCachedThreadPool();
+        Executors.newFixedThreadPool(8);
+        Executors.newWorkStealingPool(); //实现是ForkJoinPool
+    }
 }

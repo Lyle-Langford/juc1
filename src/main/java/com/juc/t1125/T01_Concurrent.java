@@ -24,5 +24,8 @@ public class T01_Concurrent {
      * 适用于读多写少的情况
      */
 
+    public static void main(String[] args) {
+
+    }
 
 }
