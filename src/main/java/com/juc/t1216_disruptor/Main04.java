@@ -26,12 +26,12 @@ public class Main04 {
          */
         /**
          * WaitStrategy等待策略, 当ringbuffer满时的策略
-         * BlockingWaitStrategy 线程阻塞，等待被唤醒
+         * BlockingWaitStrategy 线程阻塞，等待被唤醒，唤醒后再检查依赖的sequence是否已经被消费
          * BusySpinWaitStrategy 自旋等待，可能比较耗cpu
-         * TimeoutBlockingWaitStrategy 设置了等待时间
+         * TimeoutBlockingWaitStrategy 设置了等待时间，超过时间抛异常
          * LiteBlockingWaitStrategy 线程阻塞进一步优化
          * LiteTimeoutBlockingWaitStrategy 设置了等待时间，超过时间抛异常
-         * PhasedBackoffWaitStrategy
+         * PhasedBackoffWaitStrategy 根据时间参数和传入的等待策略来决定使用哪种策略
          * YieldingWaitStrategy 尝试100次，然后Thread.yield()让出cpu
          * SleepingWaitStrategy 睡眠等待, 睡好了继续
          */
@@ -55,7 +55,22 @@ public class Main04 {
         disruptor.handleEventsWith(h1, h2);
 
         //消费者的异常处理，避免一个消费者出异常导致别的消费者无法消费
-        //disruptor.handleExceptionsFor()
+        disruptor.handleExceptionsFor(h1).with(new ExceptionHandler<LongEvent>() {
+            @Override
+            public void handleEventException(Throwable ex, long sequence, LongEvent event) {
+
+            }
+
+            @Override
+            public void handleOnStartException(Throwable ex) {
+
+            }
+
+            @Override
+            public void handleOnShutdownException(Throwable ex) {
+
+            }
+        });
 
 
         disruptor.start();

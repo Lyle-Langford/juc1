@@ -11,7 +11,7 @@ import java.util.concurrent.Executors;
 public class Main01 {
 
     public static void main(String[] args) {
-        m3();
+        m1();
 
     }
 
@@ -19,22 +19,69 @@ public class Main01 {
      * 官方示例
      */
     static void m1(){
+        //事件工厂
         LongEventFactory factory = new LongEventFactory();
         int bufferSize = 1024;
-        Disruptor<LongEvent> disruptor = new Disruptor<LongEvent>(factory, bufferSize, Executors.defaultThreadFactory());
+        //disruptor
+        Disruptor<LongEvent> disruptor = new Disruptor<>(factory, bufferSize, Executors.defaultThreadFactory());
+        //事件处理者
         disruptor.handleEventsWith(new LongEventHandler());
+        //开始
         disruptor.start();
+        //获取环形buffer
         RingBuffer<LongEvent> ringBuffer = disruptor.getRingBuffer();
 
-
-        //发布
+        //发布流程
+        //先获取一个sequence
         long sequence = ringBuffer.next();
         try {
+            //通过序列得到对象，并给对象属性赋值
             LongEvent event = ringBuffer.get(sequence);
             event.setValue(8888L);
         } finally {
+            //发布该序列的对象，防止finally确保一定会执行
             ringBuffer.publish(sequence);
         }
+        //结束
+        disruptor.shutdown();
+    }
+
+    static void m11(){
+        //事件工厂
+        LongEventFactory factory = new LongEventFactory();
+        int bufferSize = 1024;
+        //disruptor
+        Disruptor<LongEvent> disruptor = new Disruptor<>(factory, bufferSize, Executors.defaultThreadFactory());
+        //事件处理者
+        disruptor.handleEventsWith(new LongEventHandler());
+        //开始
+        disruptor.start();
+        //获取环形buffer
+        RingBuffer<LongEvent> ringBuffer = disruptor.getRingBuffer();
+
+        //发布
+        long sequence1 = ringBuffer.next();
+        System.out.println("sequence1:" + sequence1);
+
+        long sequence2 = ringBuffer.next();
+        System.out.println("sequence2:" + sequence2);
+
+        try {
+            LongEvent event1 = ringBuffer.get(sequence1);
+            event1.setValue(8888L);
+        } finally {
+            ringBuffer.publish(sequence1);
+        }
+
+
+        try {
+            LongEvent event2 = ringBuffer.get(sequence2);
+            event2.setValue(8882L);
+        } finally {
+            ringBuffer.publish(sequence2);
+        }
+        disruptor.shutdown();
+
     }
 
     /**
@@ -57,7 +104,7 @@ public class Main01 {
         };
         ringBuffer.publishEvent(translator1);
 
-        //EventTranslator lambda
+        //EventTranslator lambda表达式用法
         EventTranslator<LongEvent> translator2 = (event, sequence) -> event.setValue(2L);
         ringBuffer.publishEvent(translator2);
 
