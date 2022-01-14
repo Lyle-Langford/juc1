@@ -11,7 +11,7 @@ import java.util.concurrent.Executors;
 public class Main01 {
 
     public static void main(String[] args) {
-        m1();
+        m3();
 
     }
 
@@ -125,7 +125,7 @@ public class Main01 {
         RingBuffer<LongEvent> ringBuffer = disruptor.getRingBuffer();
         ringBuffer.publishEvent((event, sequence) -> event.setValue(1000L));
         //参数转移到外部
-        ringBuffer.publishEvent((event, sequence, l1, l2) -> event.setValue(l1 + l2), 1001L, 1002L);
+        ringBuffer.publishEvent((event, sequence, l1, l2, l3) -> event.setValue(l1 + l2 + l3), 1001L, 1002L, 10003L);
     }
 
 }
